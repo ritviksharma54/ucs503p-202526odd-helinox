@@ -1,0 +1,60 @@
+Generative AI (GenAI) Developer / Subject Matter Expert – Remote
+Turnkey Solutions LLC
+Remote
+$57 an hour - Full-time
+&nbsp;
+Benefits
+Pulled from the full job description
+
+    401(k)
+    Health insurance
+    Paid time off
+    Vision insurance
+    Dental insurance
+
+&nbsp;
+Full job description
+
+About the Role
+We are seeking a senior-level Generative AI Developer and Subject Matter Expert to lead the design, development, and deployment of advanced AI and machine learning solutions. This role requires deep expertise in generative AI model development, natural language processing (NLP), and neural network architectures, with a proven track record of delivering enterprise-grade AI applications. You will work closely with cross-functional teams to integrate AI-driven capabilities into large-scale platforms, driving innovation and business transformation.
+
+Key Responsibilities
+
+    Design, build, and train generative AI models using Generative Adversarial Networks (GANs), Variational Autoencoders (VAEs), Recurrent Neural Networks (RNNs), and Transformer architectures
+    Develop AI/ML algorithms for natural language generation (NLG), image synthesis, content creation, and conversational AI applications
+    Collaborate with engineering, data science, and product teams to integrate AI models into production-grade enterprise applications, including chatbots, virtual assistants, and automated content platforms
+    Optimize models for performance, scalability, and accuracy using advanced techniques such as reinforcement learning and fine-tuning large language models (LLMs)
+    Conduct rigorous experimentation, data analysis, and model evaluation to ensure robust AI solutions
+    Stay current with cutting-edge research in AI, machine learning, and deep learning, applying the latest techniques to business challenges
+
+Required Qualifications
+
+    Extensive hands-on experience developing and deploying generative AI models into production environments
+    Proficiency in Python and deep learning frameworks such as TensorFlow, PyTorch, and Keras
+    Strong background in neural network architectures, natural language processing (NLP), and computer vision
+    Experience with end-to-end AI project lifecycle, from data preprocessing to deployment and monitoring
+    Knowledge of cloud-based AI platforms such as AWS SageMaker, Azure Machine Learning, or Google Vertex AI
+    Strong problem-solving and analytical skills with experience working in fast-paced, agile environments
+
+Preferred Qualifications
+
+    Master’s or PhD in Computer Science, Artificial Intelligence, Machine Learning, or a related field
+    Experience with large-scale distributed systems and big data processing (e.g., Spark, Hadoop)
+    Background in telecommunications or large enterprise AI solutions
+    Familiarity with MLOps practices and AI model governance
+
+Job Type: Full-time
+
+Pay: $57.00 per hour
+
+Expected hours: 40 per week
+
+Benefits:
+
+    401(k)
+    Dental insurance
+    Health insurance
+    Paid time off
+    Vision insurance
+
+Work Location: Remote
