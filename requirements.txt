@@ -1,0 +1,6 @@
+flask
+python-dotenv
+pypdf==4.3.1
+langchain-core
+langchain-google-genai
+google-generativeai
