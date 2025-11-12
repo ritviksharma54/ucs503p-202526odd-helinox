@@ -7,7 +7,7 @@ from io import BytesIO
 
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
-
+from flask import render_template
 from pypdf import PdfReader
 from langchain_core.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -267,13 +267,7 @@ def health():
 
 @app.route("/", methods=["GET"])
 def index():
-    html = """
-    <h1>Resume Analyzer API</h1>
-    <p>Health: <a href='/health'>/health</a></p>
-    <p>HR form: <a href='/hr'>/hr</a> | Candidate form: <a href='/candidate'>/candidate</a></p>
-    <p>POST endpoints: <code>/analyze</code>, <code>/find_jobs</code>, <code>/analyze_v2?mode=hr|candidate</code></p>
-    """
-    return render_template_string(html), 200
+    return render_template("index.html")
 
 @app.route("/hr", methods=["GET"])
 def hr_page():
@@ -398,4 +392,3 @@ def analyze_v2():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)
-

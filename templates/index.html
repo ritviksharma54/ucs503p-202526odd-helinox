@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Resume Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1006/1006557.png">
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+  <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-700">AI Resume Analyzer</h1>
+    <nav>
+      <button id="hrTab" class="tab px-4 py-2 font-medium text-gray-700 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">HR Mode</button>
+      <button id="candidateTab" class="tab px-4 py-2 font-medium text-gray-700 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Candidate Mode</button>
+    </nav>
+  </header>
+
+  <main class="flex-1 container mx-auto p-6">
+    <!-- HR SECTION -->
+    <section id="hrSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Analyze Multiple Candidates</h2>
+      <form id="hrForm" enctype="multipart/form-data" class="space-y-4 bg-white shadow p-6 rounded-lg">
+        <div>
+          <label for="jd_file" class="block text-sm font-medium text-gray-700">Job Description (TXT or PDF)</label>
+          <input type="file" name="jd_file" id="jd_file" accept=".pdf,.txt"
+                 class="mt-1 block w-full border rounded p-2" required>
+        </div>
+
+        <div>
+          <label for="resumes" class="block text-sm font-medium text-gray-700">Upload Resumes (PDFs or ZIP)</label>
+          <input type="file" name="resumes" id="resumes" multiple accept=".pdf" class="mt-1 block w-full border rounded p-2">
+          <p class="text-gray-500 text-sm mt-1">or upload a ZIP of PDFs</p>
+          <input type="file" name="resume_zip" id="resume_zip" accept=".zip" class="mt-1 block w-full border rounded p-2">
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+          Analyze Candidates
+        </button>
+      </form>
+
+      <div id="hrResult" class="mt-6 bg-gray-100 p-4 rounded hidden">
+        <h3 class="font-semibold mb-2">Results:</h3>
+        <pre class="overflow-auto text-sm bg-white p-3 rounded" id="hrOutput"></pre>
+      </div>
+    </section>
+
+    <!-- CANDIDATE SECTION -->
+    <section id="candidateSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Find Best Matching Jobs</h2>
+      <form id="candidateForm" enctype="multipart/form-data" class="space-y-4 bg-white shadow p-6 rounded-lg">
+        <div>
+          <label for="resume_text" class="block text-sm font-medium text-gray-700">Paste Resume Text</label>
+          <textarea id="resume_text" name="resume_text" rows="5"
+                    class="mt-1 block w-full border rounded p-2"
+                    placeholder="Or upload your resume below"></textarea>
+        </div>
+
+        <div>
+          <label for="resume_file" class="block text-sm font-medium text-gray-700">Upload Resume (TXT or PDF)</label>
+          <input type="file" name="resume_file" id="resume_file" accept=".pdf,.txt"
+                 class="mt-1 block w-full border rounded p-2">
+        </div>
+
+        <div>
+          <label for="jd_files" class="block text-sm font-medium text-gray-700">Upload Job Descriptions (TXT/PDF or ZIP)</label>
+          <input type="file" name="jd_files" id="jd_files" multiple accept=".pdf,.txt"
+                 class="mt-1 block w-full border rounded p-2">
+          <p class="text-gray-500 text-sm mt-1">or upload a ZIP of JDs</p>
+          <input type="file" name="jd_zip" id="jd_zip" accept=".zip" class="mt-1 block w-full border rounded p-2">
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
+          Find Matching Jobs
+        </button>
+      </form>
+
+      <div id="candidateResult" class="mt-6 bg-gray-100 p-4 rounded hidden">
+        <h3 class="font-semibold mb-2">Results:</h3>
+        <pre class="overflow-auto text-sm bg-white p-3 rounded" id="candidateOutput"></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center py-4 text-gray-600 text-sm">
+    &copy; 2025 Resume Analyzer • Accessible • Fast • Modern
+  </footer>
+
+  <script>
+    // Tab switching
+    const hrTab = document.getElementById("hrTab");
+    const candidateTab = document.getElementById("candidateTab");
+    const hrSection = document.getElementById("hrSection");
+    const candidateSection = document.getElementById("candidateSection");
+
+    function showSection(section) {
+      hrSection.classList.add("hidden");
+      candidateSection.classList.add("hidden");
+      section.classList.remove("hidden");
+    }
+    hrTab.addEventListener("click", () => showSection(hrSection));
+    candidateTab.addEventListener("click", () => showSection(candidateSection));
+    showSection(hrSection); // Default
+
+    // Helper: submit form to backend and show JSON
+    async function handleSubmit(form, endpoint, outputId, resultContainer) {
+      resultContainer.classList.add("hidden");
+      const formData = new FormData(form);
+      const res = await fetch(endpoint, { method: "POST", body: formData });
+      const data = await res.json();
+      document.getElementById(outputId).textContent = JSON.stringify(data, null, 2);
+      resultContainer.classList.remove("hidden");
+    }
+
+    // HR form submission
+    document.getElementById("hrForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await handleSubmit(e.target, "/analyze", "hrOutput", document.getElementById("hrResult"));
+    });
+
+    // Candidate form submission
+    document.getElementById("candidateForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await handleSubmit(e.target, "/find_jobs", "candidateOutput", document.getElementById("candidateResult"));
+    });
+  </script>
+</body>
+</html>
