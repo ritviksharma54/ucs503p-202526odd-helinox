@@ -79,7 +79,7 @@ def build_jobs_block(items: List[Tuple[str, str]]) -> str:
 
 def run_llm_for_jobs(resume_text: str, jobs_block: str) -> dict:
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash-latest",
+        model="gemini-2.5-flash",
         temperature=0.2,
         response_mime_type="application/json",
     )

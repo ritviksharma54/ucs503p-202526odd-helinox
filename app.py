@@ -182,7 +182,7 @@ def build_resumes_block(named_texts):
 def hr_analyze(job_description_text: str, resume_named_texts):
     ensure_api_key()
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash-latest",
+        model="gemini-2.5-flash",
         temperature=0.2,
         response_mime_type="application/json",
     )
@@ -244,7 +244,7 @@ def build_jobs_block(named_texts):
 def candidate_find_jobs(resume_text: str, job_named_texts):
     ensure_api_key()
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash-latest",
+        model="gemini-2.5-flash",
         temperature=0.2,
         response_mime_type="application/json",
     )

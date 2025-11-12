@@ -3,126 +3,715 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Resume Analyzer</title>
+  <title>AI Resume Analyzer - Smart Hiring & Career Matching</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1006/1006557.png">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F46E5',
+            secondary: '#06B6D4',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+    .tab-active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .file-upload-area {
+      transition: all 0.3s ease;
+    }
+    .file-upload-area:hover {
+      border-color: #667eea;
+      background-color: #f8f7ff;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-indigo-50 via-white to-cyan-50 min-h-screen">
 
-  <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-blue-700">AI Resume Analyzer</h1>
-    <nav>
-      <button id="hrTab" class="tab px-4 py-2 font-medium text-gray-700 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">HR Mode</button>
-      <button id="candidateTab" class="tab px-4 py-2 font-medium text-gray-700 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Candidate Mode</button>
-    </nav>
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-indigo-100">
+    <div class="container mx-auto px-6 py-5">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <span class="text-white text-xl font-bold">AI</span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Resume Analyzer
+            </h1>
+            <p class="text-xs text-gray-500">Powered by Gemini AI</p>
+          </div>
+        </div>
+        <nav class="flex gap-2">
+          <button id="hrTab" class="tab px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105">
+            👔 HR Mode
+          </button>
+          <button id="candidateTab" class="tab px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105">
+            🎯 Candidate Mode
+          </button>
+        </nav>
+      </div>
+    </div>
   </header>
 
-  <main class="flex-1 container mx-auto p-6">
+  <main class="container mx-auto px-6 py-8 max-w-6xl">
     <!-- HR SECTION -->
-    <section id="hrSection" class="hidden">
-      <h2 class="text-xl font-semibold mb-4">Analyze Multiple Candidates</h2>
-      <form id="hrForm" enctype="multipart/form-data" class="space-y-4 bg-white shadow p-6 rounded-lg">
-        <div>
-          <label for="jd_file" class="block text-sm font-medium text-gray-700">Job Description (TXT or PDF)</label>
-          <input type="file" name="jd_file" id="jd_file" accept=".pdf,.txt"
-                 class="mt-1 block w-full border rounded p-2" required>
-        </div>
+    <section id="hrSection" class="hidden fade-in">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Find Your Perfect Candidate</h2>
+        <p class="text-gray-600">Upload job description and candidate resumes to get AI-powered analysis</p>
+      </div>
 
-        <div>
-          <label for="resumes" class="block text-sm font-medium text-gray-700">Upload Resumes (PDFs or ZIP)</label>
-          <input type="file" name="resumes" id="resumes" multiple accept=".pdf" class="mt-1 block w-full border rounded p-2">
-          <p class="text-gray-500 text-sm mt-1">or upload a ZIP of PDFs</p>
-          <input type="file" name="resume_zip" id="resume_zip" accept=".zip" class="mt-1 block w-full border rounded p-2">
-        </div>
+      <form id="hrForm" enctype="multipart/form-data" class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+        <div class="space-y-6">
+          <!-- Job Description Upload -->
+          <div>
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+              <span class="text-xl">📄</span>
+              Job Description
+            </label>
+            <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer">
+              <input type="file" name="jd_file" id="jd_file" accept=".pdf,.txt" 
+                     class="hidden" required>
+              <label for="jd_file" class="cursor-pointer block">
+                <div class="text-indigo-600 mb-2">
+                  <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                  </svg>
+                </div>
+                <p class="font-medium text-gray-700">Click to upload Job Description</p>
+                <p class="text-sm text-gray-500 mt-1">PDF or TXT file</p>
+                <p id="jd_file_name" class="text-sm text-green-600 mt-2 font-medium"></p>
+              </label>
+            </div>
+          </div>
 
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
-          Analyze Candidates
-        </button>
+          <!-- Resumes Upload -->
+          <div>
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+              <span class="text-xl">📋</span>
+              Candidate Resumes
+            </label>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                <input type="file" name="resumes" id="resumes" multiple accept=".pdf" class="hidden">
+                <label for="resumes" class="cursor-pointer block">
+                  <div class="text-purple-600 mb-2">
+                    <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <p class="font-medium text-gray-700 text-sm">Multiple PDF Files</p>
+                  <p class="text-xs text-gray-500 mt-1">Select multiple resumes</p>
+                  <p id="resumes_count" class="text-xs text-green-600 mt-2 font-medium"></p>
+                </label>
+              </div>
+              <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                <input type="file" name="resume_zip" id="resume_zip" accept=".zip" class="hidden">
+                <label for="resume_zip" class="cursor-pointer block">
+                  <div class="text-cyan-600 mb-2">
+                    <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <p class="font-medium text-gray-700 text-sm">ZIP Archive</p>
+                  <p class="text-xs text-gray-500 mt-1">Upload bulk resumes</p>
+                  <p id="resume_zip_name" class="text-xs text-green-600 mt-2 font-medium"></p>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            Analyze Candidates with AI
+          </button>
+        </div>
       </form>
 
-      <div id="hrResult" class="mt-6 bg-gray-100 p-4 rounded hidden">
-        <h3 class="font-semibold mb-2">Results:</h3>
-        <pre class="overflow-auto text-sm bg-white p-3 rounded" id="hrOutput"></pre>
+      <div id="hrResult" class="hidden fade-in">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <h3 class="font-bold text-3xl mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Analysis Results
+          </h3>
+          <div id="hrOutput"></div>
+        </div>
       </div>
     </section>
 
     <!-- CANDIDATE SECTION -->
-    <section id="candidateSection" class="hidden">
-      <h2 class="text-xl font-semibold mb-4">Find Best Matching Jobs</h2>
-      <form id="candidateForm" enctype="multipart/form-data" class="space-y-4 bg-white shadow p-6 rounded-lg">
-        <div>
-          <label for="resume_text" class="block text-sm font-medium text-gray-700">Paste Resume Text</label>
-          <textarea id="resume_text" name="resume_text" rows="5"
-                    class="mt-1 block w-full border rounded p-2"
-                    placeholder="Or upload your resume below"></textarea>
-        </div>
+    <section id="candidateSection" class="hidden fade-in">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Find Your Dream Job</h2>
+        <p class="text-gray-600">Upload your resume and job descriptions to discover the best matches</p>
+      </div>
 
-        <div>
-          <label for="resume_file" class="block text-sm font-medium text-gray-700">Upload Resume (TXT or PDF)</label>
-          <input type="file" name="resume_file" id="resume_file" accept=".pdf,.txt"
-                 class="mt-1 block w-full border rounded p-2">
-        </div>
+      <form id="candidateForm" enctype="multipart/form-data" class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+        <div class="space-y-6">
+          <!-- Resume Text Area -->
+          <div>
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+              <span class="text-xl">👤</span>
+              Your Resume
+            </label>
+            <textarea id="resume_text" name="resume_text" rows="5"
+                      class="w-full border-2 border-gray-300 rounded-xl p-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
+                      placeholder="Paste your resume text here, or upload a file below..."></textarea>
+          </div>
 
-        <div>
-          <label for="jd_files" class="block text-sm font-medium text-gray-700">Upload Job Descriptions (TXT/PDF or ZIP)</label>
-          <input type="file" name="jd_files" id="jd_files" multiple accept=".pdf,.txt"
-                 class="mt-1 block w-full border rounded p-2">
-          <p class="text-gray-500 text-sm mt-1">or upload a ZIP of JDs</p>
-          <input type="file" name="jd_zip" id="jd_zip" accept=".zip" class="mt-1 block w-full border rounded p-2">
-        </div>
+          <!-- Resume File Upload -->
+          <div>
+            <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+              <input type="file" name="resume_file" id="resume_file" accept=".pdf,.txt" class="hidden">
+              <label for="resume_file" class="cursor-pointer block">
+                <div class="text-indigo-600 mb-2">
+                  <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  </svg>
+                </div>
+                <p class="font-medium text-gray-700 text-sm">Or upload resume file</p>
+                <p class="text-xs text-gray-500 mt-1">PDF or TXT</p>
+                <p id="resume_file_name" class="text-xs text-green-600 mt-2 font-medium"></p>
+              </label>
+            </div>
+          </div>
 
-        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
-          Find Matching Jobs
-        </button>
+          <!-- Job Descriptions Upload -->
+          <div>
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+              <span class="text-xl">💼</span>
+              Job Descriptions
+            </label>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                <input type="file" name="jd_files" id="jd_files" multiple accept=".pdf,.txt" class="hidden">
+                <label for="jd_files" class="cursor-pointer block">
+                  <div class="text-green-600 mb-2">
+                    <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                  </div>
+                  <p class="font-medium text-gray-700 text-sm">Multiple JD Files</p>
+                  <p class="text-xs text-gray-500 mt-1">PDF or TXT files</p>
+                  <p id="jd_files_count" class="text-xs text-green-600 mt-2 font-medium"></p>
+                </label>
+              </div>
+              <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                <input type="file" name="jd_zip" id="jd_zip" accept=".zip" class="hidden">
+                <label for="jd_zip" class="cursor-pointer block">
+                  <div class="text-cyan-600 mb-2">
+                    <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <p class="font-medium text-gray-700 text-sm">ZIP Archive</p>
+                  <p class="text-xs text-gray-500 mt-1">Bulk job descriptions</p>
+                  <p id="jd_zip_name" class="text-xs text-green-600 mt-2 font-medium"></p>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Find Matching Jobs
+          </button>
+        </div>
       </form>
 
-      <div id="candidateResult" class="mt-6 bg-gray-100 p-4 rounded hidden">
-        <h3 class="font-semibold mb-2">Results:</h3>
-        <pre class="overflow-auto text-sm bg-white p-3 rounded" id="candidateOutput"></pre>
+      <div id="candidateResult" class="hidden fade-in">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <h3 class="font-bold text-3xl mb-6 bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
+            Job Matching Results
+          </h3>
+          <div id="candidateOutput"></div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="text-center py-4 text-gray-600 text-sm">
-    &copy; 2025 Resume Analyzer • Accessible • Fast • Modern
+  <footer class="bg-white/80 backdrop-blur-lg border-t border-gray-200 py-6 mt-12">
+    <div class="container mx-auto px-6 text-center">
+      <p class="text-gray-600 text-sm">
+        &copy; 2025 AI Resume Analyzer • Built with 
+        <span class="text-red-500">♥</span> using Flask & Gemini AI
+      </p>
+      <p class="text-gray-500 text-xs mt-2">
+        Fast • Accurate • Secure
+      </p>
+    </div>
   </footer>
 
   <script>
-    // Tab switching
+    // Tab switching with smooth transitions
     const hrTab = document.getElementById("hrTab");
     const candidateTab = document.getElementById("candidateTab");
     const hrSection = document.getElementById("hrSection");
     const candidateSection = document.getElementById("candidateSection");
 
-    function showSection(section) {
+    function showSection(section, activeTab) {
+      // Hide all sections
       hrSection.classList.add("hidden");
       candidateSection.classList.add("hidden");
+      
+      // Remove active class from all tabs
+      hrTab.classList.remove("tab-active");
+      candidateTab.classList.remove("tab-active");
+      
+      // Show selected section and activate tab
       section.classList.remove("hidden");
+      activeTab.classList.add("tab-active");
     }
-    hrTab.addEventListener("click", () => showSection(hrSection));
-    candidateTab.addEventListener("click", () => showSection(candidateSection));
-    showSection(hrSection); // Default
+    
+    hrTab.addEventListener("click", () => showSection(hrSection, hrTab));
+    candidateTab.addEventListener("click", () => showSection(candidateSection, candidateTab));
+    
+    // Show HR section by default
+    showSection(hrSection, hrTab);
 
-    // Helper: submit form to backend and show JSON
-    async function handleSubmit(form, endpoint, outputId, resultContainer) {
+    // File upload preview handlers
+    document.getElementById('jd_file').addEventListener('change', function(e) {
+      const fileName = e.target.files[0]?.name;
+      document.getElementById('jd_file_name').textContent = fileName ? `✓ ${fileName}` : '';
+    });
+
+    document.getElementById('resumes').addEventListener('change', function(e) {
+      const count = e.target.files.length;
+      document.getElementById('resumes_count').textContent = count ? `✓ ${count} file(s) selected` : '';
+    });
+
+    document.getElementById('resume_zip').addEventListener('change', function(e) {
+      const fileName = e.target.files[0]?.name;
+      document.getElementById('resume_zip_name').textContent = fileName ? `✓ ${fileName}` : '';
+    });
+
+    document.getElementById('resume_file').addEventListener('change', function(e) {
+      const fileName = e.target.files[0]?.name;
+      document.getElementById('resume_file_name').textContent = fileName ? `✓ ${fileName}` : '';
+    });
+
+    document.getElementById('jd_files').addEventListener('change', function(e) {
+      const count = e.target.files.length;
+      document.getElementById('jd_files_count').textContent = count ? `✓ ${count} file(s) selected` : '';
+    });
+
+    document.getElementById('jd_zip').addEventListener('change', function(e) {
+      const fileName = e.target.files[0]?.name;
+      document.getElementById('jd_zip_name').textContent = fileName ? `✓ ${fileName}` : '';
+    });
+
+    // Format HR results into beautiful HTML
+    function formatHRResults(data) {
+      let html = '';
+      
+      // Job Description Summary
+      if (data["Job Description Summary"]) {
+        html += `
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-indigo-600 rounded-lg p-6 mb-8 shadow-sm">
+            <div class="flex items-start gap-3">
+              <span class="text-3xl">📋</span>
+              <div>
+                <h4 class="font-bold text-indigo-900 text-lg mb-2">Job Description Summary</h4>
+                <p class="text-gray-700 leading-relaxed">${data["Job Description Summary"]}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Ranking Section with enhanced design
+      if (data.Ranking && data.Ranking.length > 0) {
+        html += `<div class="mb-8">
+          <h4 class="font-bold text-2xl mb-6 flex items-center gap-2">
+            <span>🏆</span>
+            <span class="bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
+              Candidate Ranking
+            </span>
+          </h4>
+          <div class="space-y-4">`;
+        
+        data.Ranking.forEach(rank => {
+          const medal = rank.Rank === 1 ? '🥇' : rank.Rank === 2 ? '🥈' : rank.Rank === 3 ? '🥉' : `#${rank.Rank}`;
+          const bgGradient = rank.Rank === 1 ? 'from-yellow-100 via-yellow-50 to-white' : 
+                            rank.Rank === 2 ? 'from-gray-100 via-gray-50 to-white' :
+                            rank.Rank === 3 ? 'from-orange-100 via-orange-50 to-white' : 'from-gray-50 to-white';
+          
+          html += `
+            <div class="bg-gradient-to-r ${bgGradient} border-2 border-yellow-200 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div class="flex items-start gap-4">
+                <div class="text-5xl flex-shrink-0">${medal}</div>
+                <div class="flex-1">
+                  <h5 class="font-bold text-2xl text-gray-800 mb-2">${rank["Candidate Name"]}</h5>
+                  <p class="text-gray-700 leading-relaxed">${rank.Justification}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+
+      // Candidates Details with modern cards
+      if (data.Candidates && data.Candidates.length > 0) {
+        html += `<div class="mb-8">
+          <h4 class="font-bold text-2xl mb-6 flex items-center gap-2">
+            <span>👥</span>
+            <span>Detailed Analysis</span>
+          </h4>
+          <div class="grid gap-6">`;
+        
+        data.Candidates.forEach(candidate => {
+          const score = candidate["Suitability Score"];
+          const scoreColor = score >= 70 ? 'from-green-500 to-emerald-600' : 
+                            score >= 40 ? 'from-yellow-500 to-orange-500' : 
+                            'from-red-500 to-rose-600';
+          const scoreBg = score >= 70 ? 'bg-green-50' : score >= 40 ? 'bg-yellow-50' : 'bg-red-50';
+          
+          html += `
+            <div class="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 ${scoreBg}">
+              <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div class="flex-1">
+                  <h5 class="font-bold text-2xl text-gray-800 mb-1">${candidate["Candidate Name"]}</h5>
+                  <p class="text-gray-600 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                    ${candidate["Years of Experience"]}
+                  </p>
+                </div>
+                <div class="relative">
+                  <div class="bg-gradient-to-br ${scoreColor} text-white rounded-2xl w-24 h-24 flex flex-col items-center justify-center shadow-lg">
+                    <div class="text-4xl font-bold">${score}</div>
+                    <div class="text-xs opacity-90">Score</div>
+                  </div>
+                  ${score >= 70 ? '<div class="absolute -top-2 -right-2 text-2xl animate-bounce">⭐</div>' : ''}
+                </div>
+              </div>
+              
+              <div class="space-y-4">
+                <div class="bg-white/60 rounded-xl p-4">
+                  <p class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <span>🎓</span> Education
+                  </p>
+                  <p class="text-gray-700">${candidate.Education}</p>
+                </div>
+
+                ${candidate["Recent Job Titles"] && candidate["Recent Job Titles"].length > 0 ? `
+                  <div class="bg-white/60 rounded-xl p-4">
+                    <p class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                      <span>💼</span> Recent Roles
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                      ${candidate["Recent Job Titles"].map(title => 
+                        `<span class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm px-4 py-2 rounded-lg shadow-sm">${title}</span>`
+                      ).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${candidate["Key Skills"] && candidate["Key Skills"].length > 0 ? `
+                  <div class="bg-white/60 rounded-xl p-4">
+                    <p class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                      <span>🔧</span> Key Skills
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                      ${candidate["Key Skills"].slice(0, 20).map(skill => 
+                        `<span class="bg-gray-200 text-gray-800 text-xs px-3 py-1.5 rounded-full font-medium">${skill}</span>`
+                      ).join('')}
+                      ${candidate["Key Skills"].length > 20 ? 
+                        `<span class="text-sm text-gray-500 px-3 py-1.5">+${candidate["Key Skills"].length - 20} more</span>` : ''}
+                    </div>
+                  </div>
+                ` : ''}
+
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border-l-4 border-indigo-600">
+                  <p class="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                    <span>💭</span> AI Analysis
+                  </p>
+                  <p class="text-gray-700 leading-relaxed">${candidate.Reasoning}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+
+      return html;
+    }
+
+    // Format Candidate results into beautiful HTML
+    function formatCandidateResults(data) {
+      let html = '';
+      
+      // Candidate Summary
+      if (data["Candidate Summary"]) {
+        html += `
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-600 rounded-lg p-6 mb-8 shadow-sm">
+            <div class="flex items-start gap-3">
+              <span class="text-3xl">👤</span>
+              <div>
+                <h4 class="font-bold text-green-900 text-lg mb-2">Your Profile Summary</h4>
+                <p class="text-gray-700 leading-relaxed">${data["Candidate Summary"]}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Top Recommendations with enhanced styling
+      if (data["Top Recommendations"] && data["Top Recommendations"].length > 0) {
+        html += `<div class="mb-8">
+          <h4 class="font-bold text-2xl mb-6 flex items-center gap-2">
+            <span>⭐</span>
+            <span class="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              Top Recommendations
+            </span>
+          </h4>
+          <div class="space-y-4">`;
+        
+        data["Top Recommendations"].forEach(rec => {
+          html += `
+            <div class="bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-2 border-green-300 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <h5 class="font-bold text-xl text-gray-800 mb-3 flex items-center gap-2">
+                <span class="text-2xl">🎯</span>
+                ${rec["Job Id"]}
+              </h5>
+              <div class="bg-white/60 rounded-lg p-4 mb-4">
+                <p class="text-gray-800"><strong class="text-green-700">Why this job:</strong> ${rec.Why}</p>
+              </div>
+              ${rec["How to Improve"] && rec["How to Improve"].length > 0 ? `
+                <div class="bg-white/60 rounded-lg p-4">
+                  <p class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>💡</span> How to Improve Your Chances:
+                  </p>
+                  <ul class="space-y-2">
+                    ${rec["How to Improve"].map(tip => 
+                      `<li class="flex items-start gap-2 text-gray-700">
+                        <span class="text-green-600 mt-1">▸</span>
+                        <span>${tip}</span>
+                      </li>`
+                    ).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+
+      // Job Ranking
+      if (data.Ranking && data.Ranking.length > 0) {
+        html += `<div class="mb-8">
+          <h4 class="font-bold text-2xl mb-6 flex items-center gap-2">
+            <span>🏆</span>
+            <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Job Ranking
+            </span>
+          </h4>
+          <div class="space-y-4">`;
+        
+        data.Ranking.forEach(rank => {
+          const medal = rank.Rank === 1 ? '🥇' : rank.Rank === 2 ? '🥈' : rank.Rank === 3 ? '🥉' : `#${rank.Rank}`;
+          const bgGradient = rank.Rank === 1 ? 'from-purple-100 via-purple-50 to-white' : 
+                            rank.Rank === 2 ? 'from-pink-100 via-pink-50 to-white' :
+                            rank.Rank === 3 ? 'from-indigo-100 via-indigo-50 to-white' : 'from-gray-50 to-white';
+          
+          html += `
+            <div class="bg-gradient-to-r ${bgGradient} border-2 border-purple-200 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div class="flex items-start gap-4">
+                <div class="text-5xl flex-shrink-0">${medal}</div>
+                <div class="flex-1">
+                  <h5 class="font-bold text-2xl text-gray-800 mb-1">${rank["Job Title"]}</h5>
+                  <p class="text-lg text-gray-600 mb-2">${rank.Company}</p>
+                  <p class="text-sm text-gray-500 mb-3">${rank["Job Id"]}</p>
+                  <p class="text-gray-700 leading-relaxed">${rank.Justification}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+
+      // Jobs Details with modern design
+      if (data.Jobs && data.Jobs.length > 0) {
+        html += `<div class="mb-8">
+          <h4 class="font-bold text-2xl mb-6 flex items-center gap-2">
+            <span>💼</span>
+            <span>Detailed Job Analysis</span>
+          </h4>
+          <div class="grid gap-6">`;
+        
+        data.Jobs.forEach(job => {
+          const score = job["Suitability Score"];
+          const scoreColor = score >= 70 ? 'from-green-500 to-emerald-600' : 
+                            score >= 40 ? 'from-yellow-500 to-orange-500' : 
+                            'from-red-500 to-rose-600';
+          const scoreBg = score >= 70 ? 'bg-green-50' : score >= 40 ? 'bg-yellow-50' : 'bg-red-50';
+          
+          html += `
+            <div class="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 ${scoreBg}">
+              <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div class="flex-1">
+                  <h5 class="font-bold text-2xl text-gray-800 mb-1">${job["Job Title"]}</h5>
+                  <p class="text-lg text-gray-600 mb-1">${job.Company}</p>
+                  <p class="text-sm text-gray-500">${job["Job Id"]}</p>
+                </div>
+                <div class="relative">
+                  <div class="bg-gradient-to-br ${scoreColor} text-white rounded-2xl w-24 h-24 flex flex-col items-center justify-center shadow-lg">
+                    <div class="text-4xl font-bold">${score}</div>
+                    <div class="text-xs opacity-90">Match</div>
+                  </div>
+                  ${score >= 70 ? '<div class="absolute -top-2 -right-2 text-2xl animate-bounce">⭐</div>' : ''}
+                </div>
+              </div>
+              
+              <div class="space-y-4">
+                <div class="bg-white/60 rounded-xl p-4">
+                  <p class="text-gray-700 leading-relaxed">${job["JD Summary"]}</p>
+                </div>
+
+                ${job.Matches && job.Matches.length > 0 ? `
+                  <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-l-4 border-green-600">
+                    <p class="text-sm font-bold text-green-800 mb-3 flex items-center gap-2">
+                      <span>✅</span> Your Strengths for This Role
+                    </p>
+                    <ul class="space-y-2">
+                      ${job.Matches.map(match => 
+                        `<li class="flex items-start gap-2 text-gray-700">
+                          <span class="text-green-600 mt-1">✓</span>
+                          <span>${match}</span>
+                        </li>`
+                      ).join('')}
+                    </ul>
+                  </div>
+                ` : ''}
+
+                ${job.Gaps && job.Gaps.length > 0 ? `
+                  <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 border-l-4 border-red-600">
+                    <p class="text-sm font-bold text-red-800 mb-3 flex items-center gap-2">
+                      <span>📚</span> Areas to Develop
+                    </p>
+                    <ul class="space-y-2">
+                      ${job.Gaps.map(gap => 
+                        `<li class="flex items-start gap-2 text-gray-700">
+                          <span class="text-red-600 mt-1">▸</span>
+                          <span>${gap}</span>
+                        </li>`
+                      ).join('')}
+                    </ul>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
+      }
+
+      return html;
+    }
+
+    // Helper: submit form to backend and show formatted results
+    async function handleSubmit(form, endpoint, outputId, resultContainer, formatter) {
       resultContainer.classList.add("hidden");
-      const formData = new FormData(form);
-      const res = await fetch(endpoint, { method: "POST", body: formData });
-      const data = await res.json();
-      document.getElementById(outputId).textContent = JSON.stringify(data, null, 2);
+      const outputEl = document.getElementById(outputId);
+      
+      // Show loading with better animation
+      outputEl.innerHTML = `
+        <div class="text-center py-16">
+          <div class="relative inline-block">
+            <div class="w-20 h-20 border-8 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-2xl">🤖</span>
+            </div>
+          </div>
+          <p class="mt-6 text-xl font-semibold text-gray-700">Analyzing with AI...</p>
+          <p class="mt-2 text-sm text-gray-500">This may take a few moments</p>
+        </div>
+      `;
       resultContainer.classList.remove("hidden");
+      
+      try {
+        const formData = new FormData(form);
+        const res = await fetch(endpoint, { method: "POST", body: formData });
+        const data = await res.json();
+        
+        if (data.error) {
+          outputEl.innerHTML = `
+            <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-red-800">
+              <div class="flex items-start gap-3">
+                <span class="text-3xl">⚠️</span>
+                <div>
+                  <strong class="text-lg">Error:</strong>
+                  <p class="mt-1">${data.error}</p>
+                  ${data.detail ? `<p class="text-sm mt-2 text-red-600">${data.detail}</p>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          outputEl.innerHTML = formatter(data);
+          // Smooth scroll to results
+          resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      } catch (err) {
+        outputEl.innerHTML = `
+          <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-red-800">
+            <div class="flex items-start gap-3">
+              <span class="text-3xl">❌</span>
+              <div>
+                <strong class="text-lg">Network Error:</strong>
+                <p class="mt-1">${err.message}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     }
 
     // HR form submission
     document.getElementById("hrForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      await handleSubmit(e.target, "/analyze", "hrOutput", document.getElementById("hrResult"));
+      await handleSubmit(e.target, "/analyze", "hrOutput", document.getElementById("hrResult"), formatHRResults);
     });
 
     // Candidate form submission
     document.getElementById("candidateForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      await handleSubmit(e.target, "/find_jobs", "candidateOutput", document.getElementById("candidateResult"));
+      await handleSubmit(e.target, "/find_jobs", "candidateOutput", document.getElementById("candidateResult"), formatCandidateResults);
     });
   </script>
 </body>
