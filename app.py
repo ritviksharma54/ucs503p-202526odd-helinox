@@ -1,6 +1,7 @@
 import os
 from app import create_app
 
+# Create the app instance at module level for Gunicorn
 app = create_app()
 
 if __name__ == "__main__":
