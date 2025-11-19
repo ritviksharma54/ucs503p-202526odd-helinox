@@ -1,0 +1,24 @@
+version: "1"
+
+services:
+  # Backend API service
+  - type: web
+    name: ai-resume-analyzer-api
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn -c gunicorn_config.py app:app"
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: PORT
+        value: 5000
+
+  # Frontend static site
+  - type: web
+    name: ai-resume-analyzer-frontend
+    runtime: node
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: "./frontend/dist"
+    envVars:
+      - key: VITE_API_URL
+        value: https://ai-resume-analyzer-api.onrender.com

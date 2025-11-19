@@ -77,3 +77,25 @@ dmypy.json
 
 # Misc
 *.DS_Store
+
+# Frontend (Vue/Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.eslintcache
+
+# Old templates (we're using Vue now)
+templates/
+
+# Legacy core files (refactored into app/)
+analyse_core.py
+jobs_core.py
+
+# Sample test files
+resumes/
+sample_jds/
+jd.txt
+
+# Documentation (keep in repo but don't need to track changes)
+*.pdf
+*.docx
